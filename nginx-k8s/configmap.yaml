@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+data:
+  nginx.conf: |
+    pid /tmp/nginx.pid;  # Use /tmp for the PID file
+    worker_processes 1;
+
+    events {
+      worker_connections 1024;
+    }
+
+    http {
+      server {
+        listen 8080;  # Restricted to a non-privileged port (greater than 1024)
+        server_name localhost;
+        
+        # Serve a basic hello-world index page (if present in the container)
+        location / {
+          root /usr/share/nginx/html;
+          index index.html;
+        }
+        
+        # Health check endpoint (returns HTTP 200)
+        location /healthz {
+          return 200;
+        }
+      }
+    }
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: index-page
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="UTF-8">
+        <title>Welcome to NGINX - Built by Minimus!</title>
+      </head>
+      <body>
+        <h1>Hello World! Your NGINX web server is up and running as an unprivileged container!</h1>
+        <p>This is a custom index page served over minikube.</p>
+      </body>
+    </html>

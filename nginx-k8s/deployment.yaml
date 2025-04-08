@@ -18,9 +18,12 @@ spec:
         runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 1000
+      imagePullSecrets:
+      - name: minimus-pull-secret
       containers:
       - name: nginx
-        image: reg.mini.dev/{minimus token}/nginx:latest
+        image: reg.mini.dev/nginx:latest
+
         ports:
         - containerPort: 8080
         resources:

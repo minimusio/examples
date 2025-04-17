@@ -66,7 +66,7 @@ func handleRoot(w http.ResponseWriter, r *http.Request) {
 		</head>
 		<body>
 			<h1>Welcome to Minimus Go Server</h1>
-			<p>This is a simple Minimus HTTP server written in Go that displays different messages based on the URI.</p>
+			<p>This is a simple HTTP server built with Go and Minimus. It displays different messages based on the URI.</p>
 			<nav>
 				<a href="/">Home</a>
 				<a href="/hello">Hello</a>
@@ -108,8 +108,8 @@ func handleHello(w http.ResponseWriter, r *http.Request) {
 			</style>
 		</head>
 		<body>
-			<h1>Hello, visitor!</h1>
-			<p>Thank you for visiting the hello page of Minimus Go HTTP server.</p>
+			<h1>Hello!</h1>
+			<p>Thank you for visiting the hello-world page for this Minimus example for an HTTP server built with Go.</p>
 			<p><a href="/">Return to Home</a></p>
 		</body>
 		</html>
@@ -145,8 +145,8 @@ func handleAbout(w http.ResponseWriter, r *http.Request) {
 			</style>
 		</head>
 		<body>
-			<h1>About Minimus</h1>
-			<p>This is a simple demonstration of a Minimus Go HTTP server that displays different content based on the requested URI path.</p>
+			<h1>Go Test</h1>
+			<p>This is meant as a simple demo for a Go HTTP server built with Minimus. It displays different content based on the requested URI path.</p>
 			<p>Built with Minimus secure images.</p>
 			<p><a href="/">Return to Home</a></p>
 		</body>
@@ -186,8 +186,8 @@ func handleContact(w http.ResponseWriter, r *http.Request) {
 			<h1>Contact Information</h1>
 			<p>This is a demo application. For more information:</p>
 			<ul>
-				<li>Email: support@minimus.com</li>
-				<li>GitHub: github.com/example/go-http-demo</li>
+				<li>Email: support@minimus.io</li>
+				<li>GitHub: https://github.com/minimusio/examples</li>
 			</ul>
 			<p><a href="/">Return to Home</a></p>
 		</body>

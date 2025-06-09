@@ -11,7 +11,7 @@
     <packaging>jar</packaging>
 
     <name>Simple Java Application</name>
-    <description>A simple Java application for Docker multistage build demo</description>
+    <description>A simple Java application for Docker multi-stage build demo</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

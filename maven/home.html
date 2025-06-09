@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Demo Java Application for Minimus</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .info-item {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: white;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Demo Java Application for Minimus</h1>
+        </div>
+
+        <div class="info-item">
+            <strong>Application started at:</strong> <span th:text="${currentTime}"></span>
+        </div>
+
+        <div class="info-item">
+            <strong>Java Version:</strong> <span th:text="${javaVersion}"></span>
+        </div>
+
+        <div class="info-item">
+            <strong>OS:</strong> <span th:text="${osName}"></span>
+        </div>
+
+        <div class="info-item">
+            <strong>Environment:</strong> <span th:text="${environment}"></span>
+        </div>
+    </div>
+</body>
+</html>

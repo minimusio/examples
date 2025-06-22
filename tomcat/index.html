@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Tomcat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .info-box {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #4CAF50;
+            border-radius: 25px;
+            font-weight: bold;
+            margin: 20px 0;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 20px;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .datetime {
+            font-family: 'Courier New', monospace;
+            font-size: 1.2em;
+            color: #FFD700;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Minimus Tomcat Server Running!</h1>
+        
+        <div class="status">✅ Server Status: ACTIVE</div>
+        
+        <div class="info-box">
+            <h3>Server Information:</h3>
+            <p><strong>Container:</strong> reg.mini.dev/tomcat:latest</p>
+            <p><strong>Port:</strong> 8080</p>
+            <p><strong>URL:</strong> http://localhost:8080</p>
+        </div>
+        
+        <div class="datetime" id="datetime"></div>
+        
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>🐳 Docker Ready</h4>
+                <p>Containerized setup with volume mapping for easy development</p>
+            </div>
+            
+            <div class="feature-card">
+                <h4>⚡ Hot Reload</h4>
+                <p>Changes to webapp folder are automatically deployed</p>
+            </div>
+            
+            <div class="feature-card">
+                <h4>🔧 Configurable</h4>
+                <p>Custom server.xml configuration with optimized settings</p>
+            </div>
+        </div>        
+    </div>
+
+    <script>
+        function updateDateTime() {
+            const now = new Date();
+            const options = {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                timeZoneName: 'short'
+            };
+            document.getElementById('datetime').textContent = 
+                '🕒 ' + now.toLocaleDateString('en-US', options);
+        }
+        
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+    </script>
+</body>
+</html>

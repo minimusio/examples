@@ -1,4 +1,4 @@
-issuer: http://192.168.10.189:5556/dex
+issuer: http://{HOST_IP}:5556/dex
 
 storage:
   type: sqlite3
@@ -13,7 +13,7 @@ connectors:
     name: OpenLDAP
     id: ldap
     config:
-      host: 192.168.10.189:389
+      host: {HOST_IP}:389
       insecureNoSSL: true
       bindDN: cn=admin,dc=example,dc=org
       bindPW: admin
@@ -39,6 +39,6 @@ connectors:
 staticClients:
   - id: example-app
     redirectURIs:
-      - "http://192.168.10.189:5555/callback"
+      - "http://{HOST_IP}:5555/callback"
     name: "Example App"
-    secret: ZXhhbXBsZS1hcHAtc2VjcmV0
+    secret: hcHAtc2VjcmV0ZXhhbXBsZS1

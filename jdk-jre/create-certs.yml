@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  certgen:
+    image: reg.mini.dev/minidebug:latest
+    volumes:
+      - certs:/certs
+      - ./certgen.sh:/certgen.sh:ro
+    entrypoint: ["/bin/sh", "/certgen.sh"]
+
+volumes:
+  certs:

@@ -1,0 +1,26 @@
+# ---------------------------
+# Stage 1: Install deps on dev image
+# ---------------------------
+FROM reg.mini.dev/python:latest-dev AS builder
+
+WORKDIR /app
+
+# Run venv and install required Python packages
+RUN python -m venv venv
+ENV PATH="/app/venv/bin:$PATH"
+RUN pip install requests
+
+# ---------------------------
+# Stage 2: Final minimal image
+# ---------------------------
+FROM reg.mini.dev/python:latest
+
+WORKDIR /app
+
+# Copy everything from the builder
+COPY --from=builder /app/venv /app/venv
+COPY test_client.py .
+ENV PATH="/app/venv/bin:$PATH"
+
+# Run test
+CMD ["python", "/app/test_client.py"]

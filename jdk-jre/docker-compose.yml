@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    ports:
+      - "5001:5001"
+    volumes:
+      - certs:/certs:ro
+    networks:
+      - testnet
+
+  testclient:
+    build:
+      context: .
+      dockerfile: Dockerfile.testclient
+    depends_on:
+      - app
+    volumes:
+      - certs:/certs:ro
+      - ./test_client.py:/test_client.py
+    command: ["python3", "/test_client.py"]
+    networks:
+      - testnet
+
+volumes:
+  certs:
+
+networks:
+  testnet:

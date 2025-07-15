@@ -1,0 +1,1 @@
+reg.mini.dev/openjre:latest#reg.mini.dev/openjdk:latest

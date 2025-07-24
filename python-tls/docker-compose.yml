@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  app:
+    build: .
+    ports:
+      - "5001:5001"
+    volumes:
+      - certs:/certs:ro
+    networks:
+      - testnet
+
+volumes:
+  certs:
+networks:
+  testnet:

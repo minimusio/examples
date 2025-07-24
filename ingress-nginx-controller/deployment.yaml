@@ -12,9 +12,11 @@ spec:
       labels:
         app: simple-html
     spec:
+      imagePullSecrets:
+      - name: minimus-pull-secret
       containers:
       - name: nginx
-        image: reg.mini.dev/mini_dkjintjx7h26f6qkzxxtu4eqexng2htz/nginx:latest
+        image: reg.mini.dev/nginx:latest
         volumeMounts:
         - name: html
           mountPath: /usr/share/nginx/html

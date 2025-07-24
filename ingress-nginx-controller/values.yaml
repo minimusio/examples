@@ -1,6 +1,6 @@
 controller:
   image:
-    repository: reg.mini.dev/mini_dkjintjx7h26f6qkzxxtu4eqexng2htz/ingress-nginx-controller
+    repository: reg.mini.dev/ingress-nginx-controller
     tag: latest
     digest: null
     runAsUser: 1000

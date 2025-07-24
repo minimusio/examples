@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-html
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simple-html
+  template:
+    metadata:
+      labels:
+        app: simple-html
+    spec:
+      containers:
+      - name: nginx
+        image: reg.mini.dev/mini_dkjintjx7h26f6qkzxxtu4eqexng2htz/nginx:latest
+        volumeMounts:
+        - name: html
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: html
+        configMap:
+          name: simple-html
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: simple-html
+data:
+  index.html: |
+    <html>
+      <body>
+        <h1>Hello from Minimus Kubernetes Ingress!</h1>
+      </body>
+    </html>

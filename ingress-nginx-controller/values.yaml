@@ -5,6 +5,8 @@ controller:
     digest: null
     runAsUser: 1000
     runAsGroup: 1000
+  imagePullSecrets:
+  - name: minimus-pull-secret
   admissionWebhooks:
     createSecretJob:
       securityContext:

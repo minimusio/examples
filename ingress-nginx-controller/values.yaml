@@ -1,0 +1,25 @@
+controller:
+  image:
+    repository: reg.mini.dev/mini_dkjintjx7h26f6qkzxxtu4eqexng2htz/ingress-nginx-controller
+    tag: latest
+    digest: null
+    runAsUser: 1000
+    runAsGroup: 1000
+  admissionWebhooks:
+    createSecretJob:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        readOnlyRootFilesystem: true
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        seccompProfile:
+          type: RuntimeDefault
+    patch:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true

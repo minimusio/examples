@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: istio-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+      annotations:
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+      - name: backend
+        image: reg.mini.dev/YOUR_API_KEY/darkhttpd:latest-dev
+        command: ["/bin/sh"]
+        args: ["-c", "mkdir -p /tmp/www && echo \"Hello World - $(date)\" > /tmp/www/index.html && darkhttpd /tmp/www --port 80"]
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+      - name: my-registry-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: istio-system
+spec:
+  selector:
+    app: backend
+  ports:
+  - port: 80
+    targetPort: 80
+---
+

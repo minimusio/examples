@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: reg.mini.dev/YOUR_API_KEY/darkhttpd:latest-dev
+        image: reg.mini.dev/darkhttpd:latest-dev
         command: ["/bin/sh"]
         args: ["-c", "mkdir -p /tmp/www && echo \"Hello World - $(date)\" > /tmp/www/index.html && darkhttpd /tmp/www --port 80"]
         ports:

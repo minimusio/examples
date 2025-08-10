@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: reg.mini.dev/YOUR_API_KEY/busybox:latest-dev
+        image: reg.mini.dev/busybox:latest-dev
         command: ["/bin/sh"]
         args: ["-c", "while true; do echo 'Calling backend...'; wget -qO- http://backend/; sleep 10; done"]
       imagePullSecrets:

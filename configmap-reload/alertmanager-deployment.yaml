@@ -58,7 +58,7 @@ spec:
       containers:
       # Main Alertmanager container
       - name: alertmanager
-        image: reg.mini.dev/YOUR_API_KEY/prometheus-alertmanager:latest
+        image: reg.mini.dev/prometheus-alertmanager:latest
         ports:
         - containerPort: 9093
         args:

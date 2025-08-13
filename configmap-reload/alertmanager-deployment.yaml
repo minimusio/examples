@@ -81,7 +81,7 @@ spec:
       
       # ConfigMap reload sidecar container
       - name: configmap-reload
-        image: reg.mini.dev/YOUR_API_KEY/configmap-reload:latest
+        image: reg.mini.dev/configmap-reload:latest
         args:
           - '--volume-dir=/etc/alertmanager'
           - '--webhook-url=http://localhost:9093/-/reload'

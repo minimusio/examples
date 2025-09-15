@@ -55,6 +55,8 @@ spec:
       labels:
         app: alertmanager
     spec:
+      imagePullSecrets:
+        - name: my-registry-secret
       containers:
       # Main Alertmanager container
       - name: alertmanager
@@ -78,8 +80,7 @@ spec:
           limits:
             memory: "256Mi"
             cpu: "200m"
-        imagePullSecrets:
-          - name: minimus-registry
+
       
       # ConfigMap reload sidecar container
       - name: configmap-reload
@@ -98,8 +99,7 @@ spec:
           limits:
             memory: "64Mi"
             cpu: "100m"
-        imagePullSecrets:
-          - name: minimus-registry
+
       
       volumes:
       - name: config-volume

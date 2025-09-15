@@ -56,7 +56,7 @@ spec:
         app: alertmanager
     spec:
       imagePullSecrets:
-        - name: my-registry-secret
+        - name: minimus-registry
       containers:
       # Main Alertmanager container
       - name: alertmanager

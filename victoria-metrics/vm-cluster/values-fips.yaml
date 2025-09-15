@@ -70,7 +70,7 @@ vmselect:
     # -- Image registry
     registry: reg.mini.dev
     # -- Image repository
-    repository: victoriametrics-vmselect
+    repository: victoriametrics-vmselect-fips
     # -- Image tag
     # override Chart.AppVersion
     tag: latest
@@ -369,7 +369,7 @@ vminsert:
     # -- Image registry
     registry: reg.mini.dev
     # -- Image repository
-    repository: victoriametrics-vminsert
+    repository: victoriametrics-vminsert-fips
     # -- Image tag
     # override Chart.AppVersion    
     tag: latest
@@ -644,7 +644,7 @@ vmauth:
     # -- Image registry
     registry: reg.mini.dev
     # -- Image repository
-    repository: victoriametrics-vmauth
+    repository: victoriametrics-vmauth-fips
     # -- Image tag
     # override Chart.AppVersion
     tag: latest
@@ -878,7 +878,7 @@ vmstorage:
     # -- Image registry
     registry: reg.mini.dev
     # -- Image repository
-    repository: victoriametrics-vmstorage
+    repository: victoriametrics-vmstorage-fips
     # -- Image tag
     # override Chart.AppVersion
     tag: latest

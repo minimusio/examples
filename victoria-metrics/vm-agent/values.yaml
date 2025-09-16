@@ -58,7 +58,7 @@ image:
   # -- Image registry
   registry: reg.mini.dev
   # -- Image repository
-  repository: victoriametrics-vmagent-fips
+  repository: victoriametrics-vmagent
   # -- Image tag, set to `Chart.AppVersion` by default
   tag: latest # rewrites Chart.AppVersion
   # -- Variant of the image to use.

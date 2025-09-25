@@ -1,0 +1,121 @@
+{{/*
+Expand the name of the chart.
+*/}}
+{{- define "kserve-setup.name" -}}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
+{{/*
+Create a default fully qualified app name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+If release name contains chart name it will be used as a full name.
+*/}}
+{{- define "kserve-setup.fullname" -}}
+{{- if .Values.fullnameOverride }}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- $name := default .Chart.Name .Values.nameOverride }}
+{{- if contains $name .Release.Name }}
+{{- .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
+Create chart name and version as used by the chart label.
+*/}}
+{{- define "kserve-setup.chart" -}}
+{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
+{{/*
+Common labels
+*/}}
+{{- define "kserve-setup.labels" -}}
+helm.sh/chart: {{ include "kserve-setup.chart" . }}
+{{ include "kserve-setup.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "kserve-setup.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "kserve-setup.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+ModelMesh labels
+*/}}
+{{- define "kserve-setup.modelmesh.labels" -}}
+{{ include "kserve-setup.labels" . }}
+app.kubernetes.io/component: modelmesh
+{{- end }}
+
+{{/*
+ModelMesh selector labels
+*/}}
+{{- define "kserve-setup.modelmesh.selectorLabels" -}}
+{{ include "kserve-setup.selectorLabels" . }}
+app.kubernetes.io/component: modelmesh
+{{- end }}
+
+{{/*
+Proxy labels
+*/}}
+{{- define "kserve-setup.proxy.labels" -}}
+{{ include "kserve-setup.labels" . }}
+app.kubernetes.io/component: proxy
+{{- end }}
+
+{{/*
+Proxy selector labels
+*/}}
+{{- define "kserve-setup.proxy.selectorLabels" -}}
+{{ include "kserve-setup.selectorLabels" . }}
+app.kubernetes.io/component: proxy
+{{- end }}
+
+{{/*
+Create the name of the service account to use
+*/}}
+{{- define "kserve-setup.serviceAccountName" -}}
+{{- if .Values.serviceAccount.create }}
+{{- default (include "kserve-setup.fullname" .) .Values.serviceAccount.name }}
+{{- else }}
+{{- default "default" .Values.serviceAccount.name }}
+{{- end }}
+{{- end }}
+
+{{/*
+Get the image repository
+Usage: {{ include "kserve-setup.imageRepository" (dict "global" .Values.global "repository" .Values.modelmesh.image.repository) }}
+*/}}
+{{- define "kserve-setup.imageRepository" -}}
+{{- if .global.imageRegistry }}
+{{- printf "%s/%s" .global.imageRegistry .repository }}
+{{- else }}
+{{- .repository }}
+{{- end }}
+{{- end }}
+
+{{/*
+Get the image pull policy
+*/}}
+{{- define "kserve-setup.imagePullPolicy" -}}
+{{- if .pullPolicy }}
+{{- .pullPolicy }}
+{{- else if .Values.global.imagePullPolicy }}
+{{- .Values.global.imagePullPolicy }}
+{{- else }}
+{{- "IfNotPresent" }}
+{{- end }}
+{{- end }}
+
+

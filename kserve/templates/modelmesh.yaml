@@ -1,0 +1,159 @@
+{{- if .Values.modelmesh.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "kserve-setup.fullname" . }}-modelmesh-config
+  labels:
+    {{- include "kserve-setup.modelmesh.labels" . | nindent 4 }}
+data:
+  {{- with .Values.modelmesh.config }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "kserve-setup.fullname" . }}-modelmesh
+  labels:
+    {{- include "kserve-setup.modelmesh.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.modelmesh.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "kserve-setup.modelmesh.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "kserve-setup.modelmesh.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "kserve-setup.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.modelmesh.podSecurityContext | nindent 8 }}
+      containers:
+        - name: modelmesh-serving
+          securityContext:
+            {{- toYaml .Values.modelmesh.securityContext | nindent 12 }}
+          image: "{{ include "kserve-setup.imageRepository" (dict "global" .Values.global "repository" .Values.modelmesh.image.repository) }}:{{ .Values.modelmesh.image.tag }}"
+          {{- if .Values.modelmesh.command }}
+          command:
+            {{- toYaml .Values.modelmesh.command | nindent 12 }}
+          {{- end }}
+          {{- if .Values.modelmesh.args }}
+          args:
+            {{- toYaml .Values.modelmesh.args | nindent 12 }}
+          {{- end }}
+          imagePullPolicy: {{ include "kserve-setup.imagePullPolicy" .Values.modelmesh.image }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.modelmesh.service.port }}
+              protocol: TCP
+            - name: grpc
+              containerPort: {{ .Values.modelmesh.service.grpcPort }}
+              protocol: TCP
+            - name: metrics
+              containerPort: 2112
+              protocol: TCP
+            - name: health
+              containerPort: 8089
+              protocol: TCP
+          env:
+            # Required Kubernetes downward API environment variables
+            - name: WKUBE_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: WKUBE_POD_IPADDR
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: WKUBE_POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            # User-defined environment variables
+            {{- toYaml .Values.modelmesh.env | nindent 12 }}
+          volumeMounts:
+            - name: config-volume
+              mountPath: /opt/app/config
+              readOnly: true
+            - name: tmp
+              mountPath: /tmp
+            - name: logs
+              mountPath: /opt/kserve/mmesh/log
+            - name: anchor
+              mountPath: /opt/kserve/mmesh
+          {{- if .Values.modelmesh.healthChecks.enabled }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.modelmesh.healthChecks.liveness.path | default "/live" }}
+              port: {{ .Values.modelmesh.healthChecks.liveness.port | default 8089 }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.modelmesh.healthChecks.readiness.path | default "/ready" }}
+              port: {{ .Values.modelmesh.healthChecks.readiness.port | default 8089 }}
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          {{- end }}
+          resources:
+            {{- toYaml .Values.modelmesh.resources | nindent 12 }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "kserve-setup.fullname" . }}-modelmesh-config
+        - name: tmp
+          emptyDir: {}
+        - name: logs
+          emptyDir: {}
+        - name: anchor
+          emptyDir: {}
+      {{- with .Values.modelmesh.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.modelmesh.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.modelmesh.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "kserve-setup.fullname" . }}-modelmesh
+  labels:
+    {{- include "kserve-setup.modelmesh.labels" . | nindent 4 }}
+  {{- with .Values.modelmesh.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.modelmesh.service.type }}
+  ports:
+    - port: {{ .Values.modelmesh.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+    - port: {{ .Values.modelmesh.service.grpcPort }}
+      targetPort: grpc
+      protocol: TCP
+      name: grpc
+    - port: 2112
+      targetPort: metrics
+      protocol: TCP
+      name: metrics
+  selector:
+    {{- include "kserve-setup.modelmesh.selectorLabels" . | nindent 4 }}
+{{- end }}

@@ -1,0 +1,212 @@
+# Default values for kserve-setup
+# This is a YAML-formatted file.
+
+global:
+  # Global image registry
+  imageRegistry: reg.mini.dev
+  # Global image pull policy
+  imagePullPolicy: Always
+  # Global image pull secrets
+  imagePullSecrets:
+    - name: minimus-registry
+
+# KServe ModelMesh configuration
+modelmesh:
+  enabled: true
+  replicaCount: 3
+  
+  image:
+    repository: kserve-modelmesh
+    tag: latest
+    pullPolicy: Always
+  
+  # Service configuration
+  service:
+    type: ClusterIP
+    port: 8033
+    targetPort: 8033
+    grpcPort: 8034
+    annotations: {}
+  
+  # Resource limits and requests
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+    requests:
+      cpu: 500m
+      memory: 1Gi
+  
+  # Node selector
+  nodeSelector: {}
+  
+  # Tolerations
+  tolerations: []
+  
+  # Affinity
+  affinity: {}
+  
+  # Pod security context
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    fsGroup: 1000
+  
+  # Container security context
+  securityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 1000
+    capabilities:
+      drop:
+        - ALL
+  
+  # Environment variables
+  env:
+    - name: MM_SERVICE_NAME
+      value: "modelmesh-serving"
+    - name: MM_SVC_GRPC_PORT
+      value: "8034"
+    - name: MM_METRICS_PORT
+      value: "2112"
+    - name: MM_GRPC_MAX_MSG_SIZE
+      value: "16777216"
+  
+  # Custom command and args for your custom image
+  command: ["/bin/sleep"]
+  args: ["3600"]
+  
+  # Health checks configuration
+  healthChecks:
+    enabled: false  # Disable health checks for custom images
+    liveness:
+      path: "/live"
+      port: 8089
+    readiness:
+      path: "/ready"
+      port: 8089
+  
+  # Config map data
+  config:
+    config.yaml: |
+      podsPerRuntime: 2
+      grpcMaxMessageSizeBytes: 16777216
+      restProxyEnabled: true
+      restProxyPort: 8033
+      metrics:
+        enabled: true
+        port: 2112
+
+# KServe Proxy configuration
+proxy:
+  enabled: true
+  replicaCount: 2
+  
+  image:
+    repository: kserve-rest-proxy
+    tag: latest
+    pullPolicy: Always
+  
+  # Service configuration
+  service:
+    type: ClusterIP
+    port: 8080
+    targetPort: 8080
+    annotations: {}
+  
+  # Resource limits and requests
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+    requests:
+      cpu: 200m
+      memory: 512Mi
+  
+  # Node selector
+  nodeSelector: {}
+  
+  # Tolerations
+  tolerations: []
+  
+  # Affinity
+  affinity: {}
+  
+  # Pod security context
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    fsGroup: 1000
+  
+  # Container security context
+  securityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 1000
+    capabilities:
+      drop:
+        - ALL
+  
+  # Environment variables
+  env:
+    - name: PROXY_HTTP_PORT
+      value: "8080"
+    - name: PROXY_GRPC_PORT
+      value: "9090"
+  
+  # Health checks configuration
+  healthChecks:
+    enabled: false  # Disable health checks for custom images
+    liveness:
+      path: "/health"
+      port: "http"
+    readiness:
+      path: "/ready"
+      port: "http"
+
+# Service Account configuration
+serviceAccount:
+  create: true
+  name: ""
+  annotations: {}
+
+# RBAC configuration
+rbac:
+  create: true
+
+# Ingress configuration
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: kserve.local
+      paths:
+        - path: /
+          pathType: Prefix
+          service: modelmesh
+        - path: /proxy
+          pathType: Prefix
+          service: proxy
+  tls: []
+
+# Monitoring configuration
+monitoring:
+  serviceMonitor:
+    enabled: false
+    namespace: ""
+    labels: {}
+    annotations: {}
+
+# Pod disruption budget (removed for non-production)
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 1
+
+# Network policies
+networkPolicy:
+  enabled: false
+
+

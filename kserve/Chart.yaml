@@ -1,0 +1,24 @@
+apiVersion: v2
+name: kserve-setup
+description: A Helm chart for KServe ModelMesh and KServe Proxy deployment
+type: application
+version: 0.1.0
+appVersion: "1.0"
+keywords:
+  - kserve
+  - modelmesh
+  - proxy
+  - ml
+  - inference
+home: https://github.com/kserve/kserve
+sources:
+  - https://github.com/kserve/kserve
+  - https://github.com/kserve/modelmesh-serving
+maintainers:
+  - name: KServe Team
+    url: https://github.com/kserve/kserve
+dependencies: []
+
+
+
+

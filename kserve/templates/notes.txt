@@ -1,0 +1,69 @@
+1. Get the application URL by running these commands:
+{{- if .Values.ingress.enabled }}
+{{- range $host := .Values.ingress.hosts }}
+  {{- range .paths }}
+  http{{ if $.Values.ingress.tls }}s{{ end }}://{{ $host.host }}{{ .path }}
+  {{- end }}
+{{- end }}
+{{- else if contains "NodePort" .Values.modelmesh.service.type }}
+  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "kserve-setup.fullname" . }}-modelmesh)
+  export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo http://$NODE_IP:$NODE_PORT
+{{- else if contains "LoadBalancer" .Values.modelmesh.service.type }}
+     NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+           You can watch the status of by running 'kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "kserve-setup.fullname" . }}-modelmesh'
+  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "kserve-setup.fullname" . }}-modelmesh --template "{{"{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}"}}")
+  echo http://$SERVICE_IP:{{ .Values.modelmesh.service.port }}
+{{- else if contains "ClusterIP" .Values.modelmesh.service.type }}
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "{{ include "kserve-setup.modelmesh.selectorLabels" . }}" -o jsonpath="{.items[0].metadata.name}")
+  export CONTAINER_PORT=$(kubectl get pod --namespace {{ .Release.Namespace }} $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
+  echo "Visit http://127.0.0.1:8080 to use your application"
+  kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:$CONTAINER_PORT
+{{- end }}
+
+2. KServe ModelMesh Service Information:
+{{- if .Values.modelmesh.enabled }}
+   - Service Name: {{ include "kserve-setup.fullname" . }}-modelmesh
+   - HTTP Port: {{ .Values.modelmesh.service.port }}
+   - gRPC Port: {{ .Values.modelmesh.service.grpcPort }}
+   - Metrics Port: 2112
+{{- else }}
+   - ModelMesh is disabled
+{{- end }}
+
+3. KServe Proxy Service Information:
+{{- if .Values.proxy.enabled }}
+   - Service Name: {{ include "kserve-setup.fullname" . }}-proxy
+   - HTTP Port: {{ .Values.proxy.service.port }}
+   - gRPC Port: 9090
+{{- else }}
+   - Proxy is disabled
+{{- end }}
+
+4. Monitoring:
+{{- if .Values.monitoring.serviceMonitor.enabled }}
+   - ServiceMonitor created for Prometheus scraping
+   - Metrics available at /metrics endpoint on port 2112
+{{- else }}
+   - ServiceMonitor is disabled
+{{- end }}
+
+5. To check the status of your deployment:
+   kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/instance={{ .Release.Name }}"
+
+6. To view logs:
+   # ModelMesh logs
+   kubectl logs --namespace {{ .Release.Namespace }} -l "{{ include "kserve-setup.modelmesh.selectorLabels" . }}" -f
+   
+   # Proxy logs
+   kubectl logs --namespace {{ .Release.Namespace }} -l "{{ include "kserve-setup.proxy.selectorLabels" . }}" -f
+
+7. Configuration:
+   - ConfigMap: {{ include "kserve-setup.fullname" . }}-modelmesh-config
+   - ServiceAccount: {{ include "kserve-setup.serviceAccountName" . }}
+
+For more information about KServe, visit: https://kserve.github.io/website/
+
+
+
+

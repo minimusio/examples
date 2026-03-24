@@ -36,7 +36,7 @@ imagePullSecrets:
 # -- Config reloader image configuration
 configReloader:
   image:
-    repository: reg.mini.dev/victoriametrics-operator-config-reloader
+    repository: victoriametrics-operator-config-reloader
     tag: latest  # Replace 'latest' with your specific version tag if needed
     pullPolicy: Always
 
@@ -54,7 +54,7 @@ crds:
     enabled: false
     # -- Image configuration for CRD cleanup Job
     image:
-      repository: reg.mini.dev/kubectl
+      repository: kubectl
       # use image tag that matches k8s API version by default
       tag: latest
       pullPolicy: Always

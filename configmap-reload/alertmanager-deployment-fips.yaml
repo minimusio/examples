@@ -60,7 +60,7 @@ spec:
       containers:
       # Main Alertmanager container
       - name: alertmanager
-        image: reg.mini.dev/prometheus-alertmanager:latest
+        image: reg.mini.dev/prometheus-alertmanager-fips:latest
         ports:
         - containerPort: 9093
         args:
